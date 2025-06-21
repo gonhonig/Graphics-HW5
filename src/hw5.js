@@ -248,7 +248,7 @@ function createStadium() {
   const scoreboardGeometry = new THREE.BoxGeometry(6, 3, 0.5);
   const scoreboardMaterial = new THREE.MeshBasicMaterial({ color: 0x2222ff });
   const scoreboard = new THREE.Mesh(scoreboardGeometry, scoreboardMaterial);
-  scoreboard.position.set(0, 12, -1);
+  scoreboard.position.set(0, 12, 0);
   scene.add(scoreboard);
 
   // Score text
