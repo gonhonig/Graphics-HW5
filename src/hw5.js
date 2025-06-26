@@ -75,14 +75,13 @@ function createBasketballCourt() {
     const pts = [];
     const segments = 64;
     for (let i = 0; i <= segments; i++) {
-      const theta = (i / segments) * Math.PI * 2;
-      pts.push(
-          new THREE.Vector3(Math.cos(theta) * radius, 0, Math.sin(theta) * radius)
-      );
+      const theta = degrees_to_radians((i / segments) * 360);
+      pts.push(new THREE.Vector3(Math.cos(theta) * radius, 0, Math.sin(theta) * radius));
     }
     const circleGeo = new THREE.BufferGeometry().setFromPoints(pts);
     return new THREE.LineLoop(circleGeo, lineMaterial);
-  }
+  };
+
   scene.add(circle(2));
 
   // Three-point arcs
@@ -96,8 +95,7 @@ function createBasketballCourt() {
       pts.push(new THREE.Vector3(Math.cos(theta) * radius + x + arcOffset, 0, Math.sin(theta) * radius));
     }
     pts.push(new THREE.Vector3(x, 0, -radius));
-    return new THREE.Line(
-        new THREE.BufferGeometry().setFromPoints(pts),
+    return new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),
         lineMaterial
     );
   };
@@ -142,15 +140,16 @@ function createHoop(x) {
       new THREE.TorusGeometry(0.45, 0.03, 16, 100),
       new THREE.MeshPhongMaterial({ color: 0xff4500 })
   );
-  rim.rotation.x = Math.PI / 2;
+  rim.rotation.x = degrees_to_radians(90);
   rim.position.set(x + (x > 0 ? -0.9 : 0.9), hoopHeight - 0.3, 0);
   rim.castShadow = true;
   scene.add(rim);
 
   // Net
+  const NetLines = 16;
   const netPoints = [];
-  for (let i = 0; i < 8; i++) {
-    const angle = (i / 8) * 2 * Math.PI;
+  for (let i = 0; i < NetLines; i++) {
+    const angle = (i / NetLines) * degrees_to_radians(360);
     const r1 = 0.45
     const r2 = 0.38
     const x1 = Math.cos(angle) * r1 + rim.position.x;
@@ -198,22 +197,22 @@ function createBasketball() {
   // Latitude seam
   const latPoints = [];
   for (let i = 0; i <= segments; i++) {
-    const theta = (i / segments) * Math.PI * 2;
+    const theta = degrees_to_radians((i / segments) * 360);
     latPoints.push(new THREE.Vector3(Math.cos(theta) * seamRadius, 0, Math.sin(theta) * seamRadius));
   }
   const latLine = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(latPoints), seamMaterial);
   latLine.position.copy(ball.position);
   scene.add(latLine);
 
-  // Two vertical seams (longitude)
+  // Longitude seam
   for (let j = 0; j < 2; j++) {
     const lonPoints = [];
     for (let i = 0; i <= segments; i++) {
-      const phi = (i / segments) * Math.PI;
+      const phi = degrees_to_radians((i / segments) * 180);
       lonPoints.push(new THREE.Vector3(
-          Math.cos(j * Math.PI) * Math.sin(phi) * seamRadius,
+          Math.cos(j * degrees_to_radians(180)) * Math.sin(phi) * seamRadius,
           Math.cos(phi) * seamRadius,
-          Math.sin(j * Math.PI) * Math.sin(phi) * seamRadius
+          Math.sin(j * degrees_to_radians(180)) * Math.sin(phi) * seamRadius
       ));
     }
     const lonLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(lonPoints), seamMaterial);
@@ -275,7 +274,7 @@ function createStadium() {
   const textPlaneBack = textPlane.clone();
   textPlaneBack.position.copy(scoreboard.position);
   textPlaneBack.position.z -= 0.3;
-  textPlaneBack.rotation.y = Math.PI;
+  textPlaneBack.rotation.y = degrees_to_radians(180);
   scene.add(textPlaneBack);
 }
 
